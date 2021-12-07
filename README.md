@@ -11,13 +11,7 @@ Unlike a normal flask application, this uses SQLAlchemy more directly. This mean
 works differently than it would in flask. You have to create the engine yourself and then manage the sessions. Here we 
 manage the sessions using FastAPISessionMaker.
 
-Intialize with the following commands:
-
-`alembic init db-migrations`
-
-Then edit alembic-ini and edit the sqlalchemy.uri directive. 
-
-Now you can run following commands:
+Run following commands:
 
 `alembic revision --autogenerate`
 

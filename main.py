@@ -9,7 +9,7 @@ from api.test.healthcheck import router as test_router
 
 from fastapi.responses import HTMLResponse
 import config
-
+from api.user_management.user_basic_api import user_router
 
 app = FastAPI()
 origins = [
@@ -25,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(test_router)
+app.include_router(user_router)
 
 app.mount("/assets/static", StaticFiles(directory=Path(config.dir_path) / 'static'), name="static")
 
@@ -51,3 +52,4 @@ if __name__ == '__main__':
     uvicorn.run('main:app',
                 host=config.fastapi_host, port=config.fastapi_port,
                 reload=config.reload)
+
