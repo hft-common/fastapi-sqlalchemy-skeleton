@@ -9,6 +9,7 @@ from api.test.healthcheck import router as test_router
 
 from fastapi.responses import HTMLResponse
 import config
+from api.user_management.user_auth import auth_router
 from api.user_management.user_basic_api import user_router
 
 app = FastAPI()
@@ -26,6 +27,7 @@ app.add_middleware(
 
 app.include_router(test_router)
 app.include_router(user_router)
+app.include_router(auth_router)
 
 app.mount("/assets/static", StaticFiles(directory=Path(config.dir_path) / 'static'), name="static")
 
@@ -40,6 +42,9 @@ def get_app_angular():
 @app.on_event("startup")
 async def startup():
     # Start threads here
+    # results = await asyncio.gather(Foo.get_instance())
+    # app.state.ws = results[0][0]
+    # asyncio.create_task(expire_time_check())
     pass
 
 

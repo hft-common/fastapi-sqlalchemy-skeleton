@@ -23,3 +23,12 @@ Please read the alembic migration documentation for more info.
 
 Please add the following arguments to your pytest run configuration template (in Additional Arguments):
 
+### DBApi Setup
+
+Note that all write functions i.e. functions that write to the DB, must have two optional parameters:
+
+1. `commit=True` (defaulted to True) so that if a caller wants to commit, they can do so without specifying
+
+2. `session=None` This is to make sure that objects that need foriegn keys to also be saved can be saved appropriately in the same session / transaction
+
+All read queries should have the session parameter.
