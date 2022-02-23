@@ -32,3 +32,14 @@ Note that all write functions i.e. functions that write to the DB, must have two
 2. `session=None` This is to make sure that objects that need foriegn keys to also be saved can be saved appropriately in the same session / transaction
 
 All read queries should have the session parameter.
+
+### Sass/SCSS
+
+https://www.digitalocean.com/community/tutorials/using-sass-with-the-angular-cli
+
+https://sass-lang.com/guide
+
+### Handling validation errors
+
+Standard way of handling errors is to raise an fastAPI.HTTPException
+

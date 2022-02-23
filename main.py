@@ -32,11 +32,29 @@ app.include_router(auth_router)
 app.mount("/assets/static", StaticFiles(directory=Path(config.dir_path) / 'static'), name="static")
 
 
+
 @app.get('/')
-def get_app_angular():
-    with open('static/index.html', 'r') as file_index:
+def get_app_angular(path=None):
+
+    with open('static/templates/index.html', 'r') as file_index:
         html_content = file_index.read()
     return HTMLResponse(html_content, status_code=200)
+
+
+
+@app.get('/{path}')
+def get_static_file_angular(path):
+    try:
+        with open(f'static/templates/{path}') as file_index:
+            html_content = file_index.read()
+    except Exception as ex:
+        return RedirectResponse('/')
+    media_type = 'text/html'
+    if 'js' in path:
+        media_type = 'text/javascript'
+    if 'css' in path:
+        media_type = 'text/css'
+    return Response(html_content, status_code=200, media_type=media_type)
 
 
 @app.on_event("startup")

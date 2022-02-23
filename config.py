@@ -30,11 +30,10 @@ LOGGING_CONFIG = {
     'disable_existing_loggers': False,
     'formatters': {
         'default': {
-            'format': '[%(filename)s:%(lineno)s - %(funcName)s()] %(message)s',
+            'format': '%(asctime)s: [%(filename)s:%(lineno)s in %(funcName)s()] %(message)s',
         },
         'info': {
             'format': '[%(asctime)s]: %(message)s',
-            'datefmt': '%H:%M:%S'
         }
     },
     'handlers': {

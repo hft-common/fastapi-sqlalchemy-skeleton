@@ -27,7 +27,7 @@ def get_db():
     yield from _get_fastapi_sessionmaker().get_db()
 
 
-@lru_cache()
+@lru_cache(maxsize=32)
 def _get_fastapi_sessionmaker() -> FastAPISessionMaker:
     fastapi_session_maker = FastAPISessionMaker(config.sqlalchemy_database_uri)
     fastapi_session_maker._cached_engine = engine

@@ -3,14 +3,15 @@ from api.test.dtos.echo_dto import EchoDTO
 import config
 from api.user_management.dtos.add_user_request_dto import AddUserRequestDTO
 from api.user_management.dtos.get_user_dto import GetUserDTO
-from data.dbapi.user_management import write_queries
-from data.dbapi.user_management.dtos.add_user_dto import AddUserDTO
-from data.dbapi.user_management.read_queries import find_by_email
+from data.dbapi.user_dbapi import write_queries
+from data.dbapi.user_dbapi.dtos.add_user_dto import AddUserDTO
+from data.dbapi.user_dbapi.read_queries import find_by_email
 from data.models.users import Users
 from logic.auth.token_management import get_user_from_token
 from standard_responses.dbapi_exception_response import DBApiExceptionResponse
 
 user_router = APIRouter(prefix='/users', tags=['users'])
+
 
 #TODO: Use FastAPI-Users library
 @user_router.get("/get/{email}", response_model=GetUserDTO)
