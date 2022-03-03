@@ -29,6 +29,7 @@ def dbapi_exception_handler(function):
         try:
             if not kwargs.get('session'):
                 kwargs['session'] = next(get_db())
+            db = kwargs['session']
             retval = function(*args, **kwargs)
             if kwargs.get('commit'):
                 db.close()
