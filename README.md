@@ -19,6 +19,37 @@ Run following commands:
 
 Please read the alembic migration documentation for more info.
 
+**In case of errors with migrations**
+
+1. Truncate table alembic_version with command `truncate table alembic_version;`
+
+2. Delete all files from alembic/version/ folder. NOTE: Do not delete the folder, just the files inside.
+
+3. Run `alembic revision --autogenerate`
+
+4. Run `alembic upgrade head`
+
+### Pytest setup
+
+Please add the following arguments to your pytest run configuration template (in Additional Arguments):
+
+### Handling validation errors
+
+Standard way of handling errors is to raise an fastAPI.HTTPException
+
+### for frontend- response handling code
+    # for error
+    if not stat:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content=jsonable_encoder({"detail": "Error: " + msg, "body": "Error: " + msg})
+        )
+
+    # for success msg
+    return JSONResponse(status_code=status.HTTP_200_OK,
+                        content=jsonable_encoder({"detail": "Success: " + msg, "body": "Error: " + msg}))
+
+
 ### Pytest setup
 
 Please add the following arguments to your pytest run configuration template (in Additional Arguments):
