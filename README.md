@@ -31,7 +31,13 @@ Please read the alembic migration documentation for more info.
 
 ### Pytest setup
 
+Set default test runner to pytest
+
+Go to Settings > Tools > Python Integregrated Tools. Under Testing, set default test runner to pytest
+
 Please add the following arguments to your pytest run configuration template (in Additional Arguments):
+
+--tb=native --capture=tee-sys 
 
 ### Handling validation errors
 
