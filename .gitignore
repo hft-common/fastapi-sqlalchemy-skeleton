@@ -144,4 +144,5 @@ rithmic_ssl_cert_auth_params
 # SQLite DBs
 
 *.db
+secrets.json
 
