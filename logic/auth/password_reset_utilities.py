@@ -3,17 +3,28 @@ from itsdangerous import URLSafeSerializer
 import secrets
 
 from itsdangerous.exc import BadSignature
+from sendgrid.helpers.mail.content import Content
+from sendgrid.helpers.mail.email import Email
+from sendgrid.helpers.mail.mail import Mail
+from sendgrid.helpers.mail.to_email import To
 
 from config import default_log
 from itsdangerous.url_safe import URLSafeTimedSerializer
 
 import config
 from data.db.init_db import get_db
-from data.dbapi.user_management import read_queries
+from data.dbapi.user_dbapi import read_queries
+from data.dbapi.user_dbapi.read_queries import find_by_email
 from data.models.users import Users
+from decorators.handle_generic_exception import handle_general_exception
 from logic.auth.token_management import create_access_token
 
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
 
+
+@handle_general_exception
 def add_new_otp(user):
     """Add a new one-time password to enable password reset
 
@@ -30,6 +41,7 @@ def add_new_otp(user):
     return hashed_one_time_password
 
 
+@handle_general_exception
 def generate_reset_pwd_token(user):
     '''
     '''
@@ -44,23 +56,39 @@ def generate_reset_pwd_token(user):
 
 
 #TODO: Use FastAPI-Users library
-def send_reset_password_email(to: str, user: Users) -> object:
+@handle_general_exception
+def send_reset_password_email(to: str) -> object:
+    user = find_by_email(to)
+
     email_token, hashed_one_time_password = generate_reset_pwd_token(user)
 
     url_for_request = config.reset_password_url + f"?email_token={email_token}&" \
                                         f"hashed_one_time_password={hashed_one_time_password}"
 
-    config.default_log.debug(f"Sending reset password mail to {to}")
+    config.default_log.debug(f"Sending reset password mail to {to}. URL = {config.reset_password_url}")
 
     html = f"""
     Click here to reset password<b/>
     {url_for_request}
     """
 
-    # Fake send mail reset password
     default_log.debug(html)
 
 
+    #TODO: use send_mail function()
+    sg = sendgrid.SendGridAPIClient(api_key=config.sendgrid_api_key)
+    from_email = Email(config.sendgrid_email_address)
+    to_email = To(to)
+    subject = "Reset password"
+    content = Content("text/plain", html)
+    mail = Mail(from_email, to_email, subject, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    default_log.debug(response.status_code)
+    default_log.debug(response.body)
+    default_log.debug(response.headers)
+
+
+@handle_general_exception
 def validate_email_token(token, expiration=300):
     serializer = URLSafeTimedSerializer(config.secret_key)
     try:

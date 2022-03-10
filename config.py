@@ -33,8 +33,8 @@ def get_expiration_duration():
 secrets_path = os.getenv('SECRETS_PATH', '/home/ubuntu/secrets.json') # Default is /home/ubuntu/secrets.json
 # postgres
 postgres_username = 'postgres'
-postgres_password = 'dhaval'
-postgres_db_name = "demark"
+postgres_password = 'admin123'
+postgres_db_name = "hymbee_db"
 postgres_host = "127.0.0.1"
 postgres_port = 5432
 secret_key = 'hft-secret'

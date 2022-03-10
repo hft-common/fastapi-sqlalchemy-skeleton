@@ -80,3 +80,62 @@ https://sass-lang.com/guide
 
 Standard way of handling errors is to raise an fastAPI.HTTPException
 
+### Structure
+
+#### API
+
+Will have all the API routes
+
+Routes will have minimal code, it will call functions to execute main logic.
+
+Many smaller files are better than bigger files
+
+API - module - route files
+
+Each module folder in the api folder will have a DTOs folder for DTOs
+
+#### DATA
+
+
+Anything to do with DB
+
+models folder will have all the models
+
+Each model will have its own file
+
+DBAPi will have read modules and write modules. ALl code for read queries will be in separate packages from write queries.
+
+Each function (read or write) will have the dbapi_exception_handler decorator
+
+Each function will also have a session=None parameter
+
+DB Session will be initialized using:
+
+```
+db = session
+if session is None:
+    db = next(get_db())
+
+```
+
+Each write query function will also have a commit=True parameter. Used as:
+
+```
+if commit:
+    db.commit()
+```
+
+If a function has more than 5 args (including session and commit), use a DTO class
+
+#### LOGIC
+
+It will call the dbapi functions.
+
+It will have requirements / business logic code.
+
+Structure:
+
+logic -> module name -> individual files
+
+
+

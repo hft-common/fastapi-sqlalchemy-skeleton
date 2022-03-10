@@ -1,4 +1,8 @@
 from functools import wraps
+import psycopg2
+from requests import session
+
+from sqlalchemy_utils.types.pg_composite import psycopg2
 
 from config import default_log
 from data.db.init_db import get_db
@@ -25,7 +29,9 @@ def frontend_api_generic_exception(function):
 def dbapi_exception_handler(function):
     @wraps(function)
     def decorated_function(*args, **kwargs):
-        db = None
+        db = session
+        if session is None:
+            db = next(get_db())
         try:
             if not kwargs.get('session'):
                 kwargs['session'] = next(get_db())
@@ -39,6 +45,6 @@ def dbapi_exception_handler(function):
             default_log.exception(e)
             return DBApiExceptionResponse(error=str(e))
         finally:
-            if db is not None:
+            if db is not None and kwargs.get('commit'):
                 db.close()
     return decorated_function

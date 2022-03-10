@@ -5,7 +5,9 @@ from jose.exceptions import JWTError
 
 import config
 from datetime import datetime
-from data.dbapi.user_management import read_queries
+
+from data.dbapi.admins_dbapi.read_queries import check_user_is_admin
+from data.dbapi.user_dbapi import read_queries
 from data.models.users import Users
 from fastapi import Depends, FastAPI, HTTPException, status
 
@@ -18,10 +20,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")  # Used to get jwt token 
 def authenticate_user(email, password):
     user = read_queries.find_by_email(email)
     if not user:
-        return False
+        return False, "Error: login failed. Please check email and password"
     if not user.check_password(password):
-        return False
-    return user
+        return False, "Error: login failed. please check email and password"
+    if user and not user.is_verified:
+        return False, "Error: mail verification required"
+    return user, ""
 
 
 def create_access_token(email):
@@ -54,15 +58,32 @@ def get_user_from_token(token: str = Depends(oauth2_scheme)):
         email = payload.get('sub')
         iat = payload.get('iat')
         if email is None:
+            config.default_log.debug("Decoding payload failed")
+
             raise credentials_exception
 
         key = f"{email}_{iat}"
         token_cache = RedisTokenCache()
         if not token_cache.verify_token(key):
+            config.default_log.debug("Redis: verfiy_token failed")
             raise credentials_exception
-    except JWTError:
+    except JWTError as e:
+        config.default_log.debug(str(e))
         raise credentials_exception
     user = read_queries.find_by_email(email)
     if user is None:
+        config.default_log.debug("User is None")
         raise credentials_exception
+    return user
+
+
+
+def get_admin_from_token(user: Users = Depends(get_user_from_token)):
+
+    is_admin = check_user_is_admin(user)
+
+    if not is_admin:
+        raise HTTPException(status=status.HTTP_401_UNAUTHORIZED,
+                            detail="User is not an admin")
+
     return user
