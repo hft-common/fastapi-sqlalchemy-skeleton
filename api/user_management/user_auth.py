@@ -40,7 +40,7 @@ def login(login_user: LoginUserDTO):
     user,msg = authenticate_user(login_user.email, login_user.password)
 
     if not user:
-        return dict(error=msg, response="error"), 401
+        return dict(error=msg, response="error: User not found")
 
         # raise HTTPException(
         #     status_code=status.HTTP_401_UNAUTHORIZED,

@@ -33,6 +33,14 @@ app.mount("/assets/static", StaticFiles(directory=Path(config.dir_path) / 'stati
 
 
 
+@app.exception_handler(RequestValidationError)
+async def default_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=200,
+        content={'error': str(exc)}
+    )
+
+
 @app.get('/')
 def get_app_angular(path=None):
 

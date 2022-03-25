@@ -18,10 +18,9 @@ def frontend_api_generic_exception(function):
             return function(*args, **kwargs)
         except Exception as e:
             default_log.exception(e)
-            #TODO: Use JSONResponse
-            raise HTTPException(
-                status_code=400,
-                detail=str(e),
+            raise JSONResponse(
+                status_code=200,
+                content={'error': str(e)}
             )
     return decorated_function
  
