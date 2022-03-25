@@ -3,14 +3,16 @@ import psycopg2
 from requests import session
 
 from sqlalchemy_utils.types.pg_composite import psycopg2
+from starlette.responses import JSONResponse
 
 from config import default_log
 from data.db.init_db import get_db
 from standard_responses.dbapi_exception_response import DBApiExceptionResponse
 from fastapi import HTTPException
 
+from standard_responses.standard_json_response import standard_json_response
 
- 
+
 def frontend_api_generic_exception(function):
     @wraps(function)
     def decorated_function(*args, **kwargs):
@@ -18,9 +20,12 @@ def frontend_api_generic_exception(function):
             return function(*args, **kwargs)
         except Exception as e:
             default_log.exception(e)
-            raise JSONResponse(
-                status_code=200,
-                content={'error': str(e)}
+
+
+            return standard_json_response(
+                message=str(e),
+                data={},
+                error=True
             )
     return decorated_function
  
@@ -42,7 +47,8 @@ def dbapi_exception_handler(function):
         except (psycopg2.errors.OperationalError, psycopg2.errors.UniqueViolation, Exception) as e:
             db.rollback()
             default_log.exception(e)
-            return DBApiExceptionResponse(error=str(e))
+            return DBApiExceptionResponse(error=str(e), exception_class_name=str(
+                type(e)))  # This class resolves to False
         finally:
             if db is not None and kwargs.get('commit'):
                 db.close()
