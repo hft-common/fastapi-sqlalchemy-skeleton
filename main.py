@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import uvicorn
-from fastapi.applications import FastAPI
+from fastapi.applications import FastAPI, RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
@@ -11,6 +11,9 @@ from fastapi.responses import HTMLResponse
 import config
 from api.user_management.user_auth import auth_router
 from api.user_management.user_basic_api import user_router
+from standard_responses.standard_json_response import standard_json_response
+
+
 
 app = FastAPI()
 origins = [
@@ -35,11 +38,12 @@ app.mount("/assets/static", StaticFiles(directory=Path(config.dir_path) / 'stati
 
 @app.exception_handler(RequestValidationError)
 async def default_exception_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(
+    return standard_json_response(
         status_code=200,
-        content={'error': str(exc)}
+        data={},
+        error=True,
+        message=str(exc)
     )
-
 
 @app.get('/')
 def get_app_angular(path=None):

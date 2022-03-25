@@ -41,19 +41,12 @@ Please add the following arguments to your pytest run configuration template (in
 
 ### Handling validation errors
 
-Standard way of handling errors is to raise an fastAPI.HTTPException
+This is done through validators in the pydantic DTO. The default_exception_handler function in main returns the standrad_json_response
 
-### for frontend- response handling code
-    # for error
-    if not stat:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content=jsonable_encoder({"detail": "Error: " + msg, "body": "Error: " + msg})
-        )
+### Standard Response
 
-    # for success msg
-    return JSONResponse(status_code=status.HTTP_200_OK,
-                        content=jsonable_encoder({"detail": "Success: " + msg, "body": "Error: " + msg}))
+There is a standard_json_response() function which we send to the frontend. Please use this for any and all return values for your API calls.
+
 
 
 ### Pytest setup
