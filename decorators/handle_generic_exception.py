@@ -46,10 +46,21 @@ def dbapi_exception_handler(function):
             return retval
         except (psycopg2.errors.OperationalError, psycopg2.errors.UniqueViolation, Exception) as e:
             db.rollback()
+            db.close()
             default_log.exception(e)
             return DBApiExceptionResponse(error=str(e), exception_class_name=str(
                 type(e)))  # This class resolves to False
         finally:
-            if db is not None and kwargs.get('commit'):
-                db.close()
+            if db is not None:
+                # If it's a read query, kwargs will not have a commit parameter
+                if 'commit' not in kwargs.keys():
+                    # Meaning this session was received from previous function
+                    # and the session won't be closed if the caller specifically requested so
+                    # by setting the `close_session` parameter to False
+                    if kwargs.get('session') is not None and kwargs.get(
+                            'close_session', True):
+                        db.close()
+                else:
+                    if kwargs['commit']:
+                        db.close()
     return decorated_function
