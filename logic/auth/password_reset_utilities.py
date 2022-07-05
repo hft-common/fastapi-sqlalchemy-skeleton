@@ -16,7 +16,7 @@ from data.db.init_db import get_db
 from data.dbapi.user_dbapi import read_queries
 from data.dbapi.user_dbapi.read_queries import find_by_email
 from data.models.users import Users
-from decorators.handle_generic_exception import handle_general_exception
+from decorators.handle_generic_exception import frontend_api_generic_exception
 from logic.auth.token_management import create_access_token
 
 import sendgrid
@@ -24,7 +24,7 @@ import os
 from sendgrid.helpers.mail import *
 
 
-@handle_general_exception
+@frontend_api_generic_exception
 def add_new_otp(user):
     """Add a new one-time password to enable password reset
 
@@ -41,7 +41,7 @@ def add_new_otp(user):
     return hashed_one_time_password
 
 
-@handle_general_exception
+@frontend_api_generic_exception
 def generate_reset_pwd_token(user):
     '''
     '''
@@ -56,7 +56,7 @@ def generate_reset_pwd_token(user):
 
 
 #TODO: Use FastAPI-Users library
-@handle_general_exception
+@frontend_api_generic_exception
 def send_reset_password_email(to: str) -> object:
     user = find_by_email(to)
 
@@ -88,7 +88,7 @@ def send_reset_password_email(to: str) -> object:
     default_log.debug(response.headers)
 
 
-@handle_general_exception
+@frontend_api_generic_exception
 def validate_email_token(token, expiration=300):
     serializer = URLSafeTimedSerializer(config.secret_key)
     try:
