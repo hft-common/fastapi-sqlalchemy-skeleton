@@ -7,7 +7,6 @@ from starlette.responses import RedirectResponse
 from api.user_management.dtos.change_password_dto import ChangePasswordDTO
 from api.user_management.dtos.login_user_dto import LoginUserDTO
 from config import default_log
-from data.dbapi.memberships_dbapi.read_queries import find_all_memberships
 from data.dbapi.user_dbapi import read_queries, write_queries
 from data.dbapi.user_dbapi.dtos.update_user_dto import UpdateUserDTO
 from data.dbapi.user_dbapi.write_queries import update_user
@@ -20,12 +19,6 @@ from logic.auth.token_cache import TokenCache
 from logic.auth.token_management import authenticate_user, create_access_token, \
     get_user_from_token, oauth2_scheme
 import config
-from logic.memberships.crud_memberships.new_memberships import \
-    add_new_membership
-from data.dbapi.memberships_dbapi import read_queries as memberships_read
-from logic.memberships.crud_memberships import new_memberships
-
-
 
 
 auth_router = APIRouter(prefix='/auth', tags=['auth'])
