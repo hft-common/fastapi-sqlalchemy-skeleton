@@ -22,7 +22,6 @@ import config
 
 
 
-
 auth_router = APIRouter(prefix='/auth', tags=['auth'])
 
 #TODO: Use FastAPI-Users library
