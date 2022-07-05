@@ -3,6 +3,8 @@ from pathlib import Path
 import uvicorn
 from fastapi.applications import FastAPI, RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.responses import RedirectResponse, Response
 from starlette.staticfiles import StaticFiles
 
 from api.test.healthcheck import router as test_router
@@ -19,6 +21,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:4200",
+    "http://localhost:3000"  # React
 ]
 app.add_middleware(
     CORSMiddleware,

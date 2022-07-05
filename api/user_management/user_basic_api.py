@@ -4,7 +4,6 @@ import config
 from api.user_management.dtos.add_user_request_dto import AddUserRequestDTO
 from api.user_management.dtos.get_user_dto import GetUserDTO
 from data.dbapi.admins_dbapi.read_queries import check_user_is_admin
-from data.dbapi.memberships_dbapi.read_queries import find_by_user_id
 from data.dbapi.user_dbapi import write_queries
 from data.dbapi.user_dbapi.dtos.add_user_dto import AddUserDTO
 from data.dbapi.user_dbapi.read_queries import find_by_email
@@ -71,17 +70,10 @@ def delete_user(email):
 @user_router.get("/me")
 @frontend_api_generic_exception
 def get_me(user: Users = Depends(get_user_from_token)):
-    membership = find_by_user_id(user.id)
     is_admin = check_user_is_admin(user)
-
-    is_active = False
-
-    if membership is not None:
-        is_active = membership.is_active
 
     return dict(
         id=user.id,
         email=user.email,
-        is_active=is_active,
         is_admin=is_admin
     )

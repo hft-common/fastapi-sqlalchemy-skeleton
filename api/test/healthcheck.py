@@ -15,11 +15,3 @@ def healthcheck(request: Request):
 @router.post('/echo')
 def echo(request: Request, echoDTO: EchoDTO):
     return dict(message=echoDTO.message)
-
-
-@router.get('/print-headers')
-def print_headers(request: Request):
-    for k,v in request.headers.items():
-        default_log.debug(f"{k}: {v}")
-
-    return request.headers
