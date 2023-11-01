@@ -11,6 +11,7 @@ from api.test.healthcheck import router as test_router
 
 from fastapi.responses import HTMLResponse
 import config
+from api.test.update_excel_data import excel_router
 from api.user_management.user_auth import auth_router
 from api.user_management.user_basic_api import user_router
 from standard_responses.standard_json_response import standard_json_response
@@ -34,6 +35,7 @@ app.add_middleware(
 app.include_router(test_router)
 app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(excel_router)
 
 app.mount("/assets/static", StaticFiles(directory=Path(config.dir_path) / 'static'), name="static")
 

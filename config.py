@@ -7,7 +7,7 @@ import logging
 import json
 from dateutil.relativedelta import relativedelta
 # Flask
-fastapi_host = "0.0.0.0"
+fastapi_host = "127.0.0.1"
 fastapi_port = 5000
 debug = True
 reload = True
@@ -73,6 +73,10 @@ if secrets_file.is_file():
         frontend_url = secrets['frontend_url']
         default_logger = secrets.get('default_logger', 'console')
         log_file = secrets.get('log_file', 'app.log')
+        lime_client_id = secrets.get('lime_client_id')
+        lime_client_secret = secrets.get('lime_client_secret')
+        lime_username = secrets.get('lime_username')
+        lime_password = secrets.get('lime_password')
 
 redis_url = f"redis://{redis_username}:{redis_password}@{redis_host}:{redis_port}"
 
