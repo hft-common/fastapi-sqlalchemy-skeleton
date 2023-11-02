@@ -42,7 +42,6 @@ def get_open_value_according_to_datetime(bearer_token, symbol, period, from_date
         'Authorization': 'Bearer '+bearer_token
     }
 
-
     params = {
         'symbol': symbol,
         'period': period,
@@ -62,4 +61,4 @@ def get_open_value_according_to_datetime(bearer_token, symbol, period, from_date
         return dict(values=values, status_code=response.status_code)
     else:
         config.default_log.debug(f"Request failed with status code {response.status_code}")
-        return dict(response.status_code)
+        return dict(status_code=response.status_code, error_message=response.json())
